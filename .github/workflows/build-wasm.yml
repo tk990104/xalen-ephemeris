@@ -2,6 +2,9 @@ name: Build browser WASM
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/build-wasm.yml"
 
 permissions:
   contents: read
