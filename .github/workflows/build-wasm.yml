@@ -1,0 +1,26 @@
+name: Build browser WASM
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - name: Build browser package
+        working-directory: crates/xalen-wasm
+        run: wasm-pack build --release --target web --out-dir pkg --no-default-features
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xalen-wasm-web
+          path: crates/xalen-wasm/pkg/
+          if-no-files-found: error
